@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexVote - Terminal</title>
+    <style>
+        :root {
+            --bg-color: #050505;
+            --panel-bg: #111;
+            --primary: #00f0ff;
+            --secondary: #ff003c;
+            --text-main: #e0e0e0;
+            --text-muted: #666;
+            --border: #222;
+            --success: #00ff00;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&family=Fira+Code:wght@400;500&display=swap');
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Abstract Background Lines */
+        .bg-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            margin-top: 0;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: var(--panel-bg);
+            border-right: 1px solid var(--border);
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+
+        .status-panel {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border-radius: 4px;
+        }
+
+        .status-item {
+            margin-bottom: 1rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+        }
+
+        .status-label {
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        .status-value {
+            color: var(--text-main);
+            word-break: break-all;
+        }
+
+        .cyber-btn {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--bg-color);
+            background-color: var(--primary);
+            padding: 0.75rem 1.5rem;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .cyber-btn:hover {
+            background-color: white;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+        }
+
+        .cyber-btn:disabled {
+            background-color: #333;
+            color: #666;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-item::before {
+            content: '>';
+            color: var(--primary);
+            margin-right: 10px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item.active::before,
+        .nav-item:hover::before {
+            opacity: 1;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 3rem;
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .panel {
+            background: rgba(17, 17, 17, 0.8);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 30px;
+            height: 30px;
+            border-top: 2px solid var(--primary);
+            border-left: 2px solid var(--primary);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 1rem;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
+            color: white;
+            font-family: 'Fira Code', monospace;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+        }
+
+        /* Election Grid */
+        .election-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .election-card {
+            background: var(--panel-bg);
+            border: 1px solid #333;
+            padding: 1.5rem;
+            transition: border-color 0.2s;
+        }
+
+        .election-card:hover {
+            border-color: var(--primary);
+        }
+
+        .election-card h3 {
+            color: var(--primary);
+            border-bottom: 1px dashed #333;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .candidate-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            margin-bottom: 0.5rem;
+            border-left: 2px solid transparent;
+        }
+
+        .candidate-row:hover {
+            border-left-color: var(--primary);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .candidate-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .candidate-votes {
+            font-family: 'Fira Code', monospace;
+            color: var(--primary);
+        }
+
+        .vote-btn {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .vote-btn:hover {
+            background: var(--primary);
+            color: var(--bg-color);
+        }
+
+        /* System Messages */
+        .sys-message {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.9);
+            border-left: 4px solid var(--primary);
+            font-family: 'Fira Code', monospace;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.3s forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .sys-message.error {
+            border-left-color: var(--secondary);
+            color: var(--secondary);
+        }
+
+        .sys-message.success {
+            border-left-color: var(--success);
+            color: var(--success);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+    <!-- Load Ethers -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.10.0/ethers.umd.min.js"></script>
+    <!-- Load Generated Contract Address with Cache Buster to prevent Chrome caching old deployments -->
+    <script>document.write('<script src="contractaddress.js?v=' + new Date().getTime() + '"></scr' + 'ipt>');</script>
+    <script src="abi.js"></script>
+</head>
+
+<body>
+    <div class="bg-lines"></div>
+
+    <aside class="sidebar">
+        <h1 class="logo">NEXVOTE</h1>
+
+        <div class="status-panel">
+            <div class="status-item">
+                <span class="status-label">SYS.STATUS:</span>
+                <span class="status-value" id="connStatus" style="color: var(--secondary);">DISCONNECTED</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">IDENTITY:</span>
+                <span class="status-value" id="walletAddress">Not Found</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">ACCESS_LEVEL:</span>
+                <span class="status-value" id="accessLevel">VOTER</span>
+            </div>
+        </div>
+
+        <button id="connectBtn" class="cyber-btn">CONNECT_WALLET</button>
+
+        <ul class="nav-menu">
+            <li class="nav-item active" data-tab="tab-dashboard">DASHBOARD</li>
+            <li class="nav-item hidden" id="navAdmin" data-tab="tab-admin">ADMIN_PANEL</li>
+            <li class="nav-item" data-tab="tab-config">CONFIGURATION</li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <!-- Dashboard Tab -->
+        <div id="tab-dashboard" class="tab-content active">
+            <h2>Active Elections</h2>
+            <button id="refreshElectionsBtn" class="cyber-btn"
+                style="width: auto; margin-bottom: 2rem;">SYNC_LEDGER</button>
+            <div id="electionsList" class="election-grid">
+                <p style="color: var(--text-muted); font-family: 'Fira Code', monospace;">Awaiting synchronization...
+                </p>
+            </div>
+        </div>
+
+        <!-- Admin Tab -->
+        <div id="tab-admin" class="tab-content">
+            <h2>System Administration</h2>
+            <div class="panel">
+                <h3>Deploy New Election</h3>
+                <div class="input-group">
+                    <label>> ELECTION_TITLE</label>
+                    <input type="text" id="electionTitle" placeholder="Enter alphanumeric title...">
+                </div>
+                <div class="input-group">
+                    <label>> CANDIDATE_ARRAY (comma separated)</label>
+                    <input type="text" id="candidatesList" placeholder="Alice, Bob, Charlie...">
+                </div>
+                <button id="createElectionBtn" class="cyber-btn" style="width: auto;">INITIALIZE_CONTRACT</button>
+            </div>
+        </div>
+
+        <!-- Configuration Tab -->
+        <div id="tab-config" class="tab-content">
+            <h2>Network Configuration</h2>
+            <div class="panel">
+                <div class="input-group">
+                    <label>> TARGET_CONTRACT_ADDRESS</label>
+                    <input type="text" id="contractAddressInput" placeholder="0x...">
+                    <p
+                        style="font-family: 'Fira Code', monospace; color: var(--text-muted); margin-top: 0.5rem; font-size: 0.8rem;">
+                        * Address auto-loaded from contractaddress.js if deployment script ran.
+                    </p>
+                </div>
+                <button id="loadContractBtn" class="cyber-btn" style="width: auto;">CONNECT_CONTRACT</button>
+            </div>
+        </div>
+    </main>
+
+    <div id="sysMessage" class="sys-message"></div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

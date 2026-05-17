@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexVote - Decentralized Election</title>
+    <style>
+        :root {
+            --bg-color: #050505;
+            --primary: #00f0ff;
+            --secondary: #ff003c;
+            --text-main: #e0e0e0;
+            --text-muted: #888;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap');
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Glitch Effect for Title */
+        .glitch {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5rem;
+            font-weight: 900;
+            position: relative;
+            color: white;
+            text-shadow: 0.05em 0 0 var(--primary), -0.025em -0.05em 0 var(--secondary),
+                0.025em 0.05em 0 #00ff00;
+            animation: glitch 500ms infinite;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 0.05em 0 0 var(--primary), -0.025em -0.05em 0 var(--secondary), 0.025em 0.05em 0 #00ff00; }
+            14% { text-shadow: 0.05em 0 0 var(--primary), -0.025em -0.05em 0 var(--secondary), 0.025em 0.05em 0 #00ff00; }
+            15% { text-shadow: -0.05em -0.025em 0 var(--primary), 0.025em 0.025em 0 var(--secondary), -0.05em -0.05em 0 #00ff00; }
+            49% { text-shadow: -0.05em -0.025em 0 var(--primary), 0.025em 0.025em 0 var(--secondary), -0.05em -0.05em 0 #00ff00; }
+            50% { text-shadow: 0.025em 0.05em 0 var(--primary), 0.05em 0 0 var(--secondary), 0 -0.05em 0 #00ff00; }
+            99% { text-shadow: 0.025em 0.05em 0 var(--primary), 0.05em 0 0 var(--secondary), 0 -0.05em 0 #00ff00; }
+            100% { text-shadow: -0.025em 0 0 var(--primary), -0.025em -0.025em 0 var(--secondary), -0.025em -0.05em 0 #00ff00; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        header {
+            padding: 8rem 0 4rem;
+            text-align: center;
+        }
+
+        .hero-text {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            letter-spacing: 1px;
+        }
+
+        /* Cyberpunk Button */
+        .cyber-btn {
+            display: inline-block;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--bg-color);
+            background-color: var(--primary);
+            padding: 1rem 3rem;
+            text-transform: uppercase;
+            text-decoration: none;
+            position: relative;
+            border: none;
+            cursor: pointer;
+            clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+            transition: all 0.2s;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+        }
+
+        .cyber-btn:hover {
+            background-color: var(--secondary);
+            color: white;
+            box-shadow: 0 0 30px rgba(255, 0, 60, 0.8);
+            transform: scale(1.05);
+        }
+
+        /* Grid Cards */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 4rem 0;
+        }
+
+        .cyber-card {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid var(--primary);
+            padding: 2rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .cyber-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 10px; height: 10px;
+            border-top: 2px solid var(--primary);
+            border-left: 2px solid var(--primary);
+        }
+
+        .cyber-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0; right: 0;
+            width: 10px; height: 10px;
+            border-bottom: 2px solid var(--primary);
+            border-right: 2px solid var(--primary);
+        }
+
+        .cyber-card:hover {
+            box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.2), 0 0 15px rgba(0, 240, 255, 0.4);
+            transform: translateY(-5px);
+        }
+
+        .cyber-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-top: 0;
+            text-transform: uppercase;
+        }
+
+        /* Steps Timeline */
+        .timeline {
+            padding: 4rem 0;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0; bottom: 0; left: 50%;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            transform: translateX(-50%);
+        }
+
+        .timeline-step {
+            position: relative;
+            margin-bottom: 4rem;
+            width: 50%;
+            padding-right: 3rem;
+            box-sizing: border-box;
+        }
+
+        .timeline-step:nth-child(even) {
+            margin-left: 50%;
+            padding-right: 0;
+            padding-left: 3rem;
+        }
+
+        .timeline-content {
+            background: rgba(20, 20, 20, 0.9);
+            border-left: 4px solid var(--primary);
+            padding: 2rem;
+            position: relative;
+        }
+
+        .timeline-step:nth-child(even) .timeline-content {
+            border-left: none;
+            border-right: 4px solid var(--secondary);
+        }
+
+        .timeline-number {
+            position: absolute;
+            top: 50%;
+            right: -3rem;
+            transform: translateY(-50%) translateX(50%);
+            width: 50px; height: 50px;
+            background: var(--bg-color);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: bold;
+            z-index: 2;
+        }
+
+        .timeline-step:nth-child(even) .timeline-number {
+            left: -3rem;
+            right: auto;
+            transform: translateY(-50%) translateX(-50%);
+            border-color: var(--secondary);
+            color: var(--secondary);
+        }
+
+        .timeline-content h4 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin: 0 0 1rem;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .timeline-content p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* Abstract Background Lines */
+        .bg-lines {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 1;
+            pointer-events: none;
+            perspective: 500px;
+        }
+
+        .bg-lines::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0; height: 40vh;
+            background: linear-gradient(to top, rgba(0, 240, 255, 0.1), transparent);
+        }
+        
+        @media (max-width: 768px) {
+            .timeline::before { left: 0; }
+            .timeline-step { width: 100%; padding-left: 3rem; padding-right: 0; }
+            .timeline-step:nth-child(even) { margin-left: 0; }
+            .timeline-number { left: 0; right: auto; transform: translateY(-50%) translateX(-50%); }
+            .timeline-step:nth-child(even) .timeline-content { border-right: none; border-left: 4px solid var(--secondary); }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-lines"></div>
+
+    <header class="container">
+        <h1 class="glitch" data-text="NexVote">NexVote</h1>
+        <p class="hero-text">The next generation of democratic participation. Immutable, transparent, and cryptographically secure elections running natively on the Ethereum Virtual Machine.</p>
+        <a href="app.html" class="cyber-btn">INITIATE_VOTE</a>
+    </header>
+
+    <main class="container">
+        <section class="grid">
+            <div class="cyber-card">
+                <h3>// IMMUTABILITY</h3>
+                <p>Once cast, votes are cryptographically sealed in blocks. Alteration or deletion is mathematically impossible.</p>
+            </div>
+            <div class="cyber-card">
+                <h3>// TRANSPARENCY</h3>
+                <p>Smart contracts are public. Anyone can audit the logic and verify the vote tally in real-time, eliminating trust requirements.</p>
+            </div>
+            <div class="cyber-card">
+                <h3>// VERIFICATION</h3>
+                <p>Strict identity controls map one wallet address to exactly one vote per election. Double-voting is physically blocked at the consensus layer.</p>
+            </div>
+        </section>
+
+        <h2 style="font-family: 'Orbitron', sans-serif; text-align: center; color: white; font-size: 2.5rem; margin-top: 4rem; text-transform: uppercase; letter-spacing: 2px;">Execution Protocol</h2>
+        
+        <section class="timeline">
+            <div class="timeline-step">
+                <div class="timeline-number">01</div>
+                <div class="timeline-content">
+                    <h4>Establish Link</h4>
+                    <p>Connect your Web3 identity protocol (MetaMask or injected provider) to authenticate via cryptographic signature.</p>
+                </div>
+            </div>
+            <div class="timeline-step">
+                <div class="timeline-number">02</div>
+                <div class="timeline-content">
+                    <h4>Sync Contracts</h4>
+                    <p>Load the specific ElectionFactory contract address deployed on the local node or remote testnet (Sepolia).</p>
+                </div>
+            </div>
+            <div class="timeline-step">
+                <div class="timeline-number">03</div>
+                <div class="timeline-content">
+                    <h4>Execute Vote</h4>
+                    <p>Select your candidate from the active ledger and broadcast the transaction to the EVM network.</p>
+                </div>
+            </div>
+            <div class="timeline-step">
+                <div class="timeline-number">04</div>
+                <div class="timeline-content">
+                    <h4>Monitor Status</h4>
+                    <p>Watch the network confirm your block and update the global candidate tallies instantly.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
