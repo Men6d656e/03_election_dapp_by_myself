@@ -1,0 +1,55 @@
+No files changed, compilation skipped
+Script ran successfully.
+
+== Logs ==
+  ElectionFactory deployed at: 0x06d327C304A7369cE523b382aE810A4F8Eb75CE4
+
+## Setting up 1 EVM.
+
+==========================
+
+Chain 11155111
+
+Estimated gas price: 2.126427166 gwei
+
+Estimated total gas used for script: 1545099
+
+Estimated amount required: 0.003285540487759434 ETH
+
+==========================
+
+
+==========================
+
+ONCHAIN EXECUTION COMPLETE & SUCCESSFUL.
+##
+Start verification for (1) contracts
+Start verifying contract `0x06d327C304A7369cE523b382aE810A4F8Eb75CE4` deployed on sepolia
+EVM version: prague
+Compiler version: 0.8.33
+
+Submitting verification for [src/Election.sol:ElectionFactory] 0x06d327C304A7369cE523b382aE810A4F8Eb75CE4.
+
+Submitting verification for [src/Election.sol:ElectionFactory] 0x06d327C304A7369cE523b382aE810A4F8Eb75CE4.
+
+Submitting verification for [src/Election.sol:ElectionFactory] 0x06d327C304A7369cE523b382aE810A4F8Eb75CE4.
+
+Submitting verification for [src/Election.sol:ElectionFactory] 0x06d327C304A7369cE523b382aE810A4F8Eb75CE4.
+
+Submitting verification for [src/Election.sol:ElectionFactory] 0x06d327C304A7369cE523b382aE810A4F8Eb75CE4.
+
+Submitting verification for [src/Election.sol:ElectionFactory] 0x06d327C304A7369cE523b382aE810A4F8Eb75CE4.
+Submitted contract for verification:
+	Response: `OK`
+	GUID: `qgzaidh7yifhq7zccjxjjpua8jk3ugrnyf44sdfp7xuxvbwndc`
+	URL: https://sepolia.etherscan.io/address/0x06d327c304a7369ce523b382ae810a4f8eb75ce4
+Contract verification status:
+Response: `OK`
+Details: `Pass - Verified`
+Contract successfully verified
+All (1) contracts were verified!
+
+Transactions saved to: /home/akash/programing/block_chain_projects/03_election_dapp_by_myself/broadcast/DeployElectionFactory.s.sol/11155111/run-latest.json
+
+Sensitive values saved to: /home/akash/programing/block_chain_projects/03_election_dapp_by_myself/cache/DeployElectionFactory.s.sol/11155111/run-latest.json
+
